@@ -2,9 +2,6 @@ import string
 
 from openai import AzureOpenAI
 from src.constants import *
-from sentence_transformers import SentenceTransformer, util
-
-model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Initialize the Azure OpenAI client
 client = AzureOpenAI(
