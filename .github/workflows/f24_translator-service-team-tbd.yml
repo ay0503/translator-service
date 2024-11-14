@@ -66,4 +66,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C857182C2894495C84A61489B498C48D }}
         env:
-            MY_SECRET_KEY: ${{ secrets.AZUREOPENAI_API_KEY }}
+            AZUREOPENAI_API_KEY: ${{ secrets.AZUREOPENAI_API_KEY }}
