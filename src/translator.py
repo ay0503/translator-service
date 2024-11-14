@@ -1,16 +1,14 @@
-import string, os
+import string
 
 from openai import AzureOpenAI
 from src.constants import *
-# from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer, util
 
-# model = SentenceTransformer('all-MiniLM-L6-v2')
-
-AZUREOPENAI_API_KEY = os.getenv('AZUREOPENAI_API_KEY')
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Initialize the Azure OpenAI client
 client = AzureOpenAI(
-    api_key=AZUREOPENAI_API_KEY,
+    api_key="A3jAqgnw7S5tWR1x6RyhTPcRJADK8mV7pN5WondwLRI4bEzssq6yJQQJ99AJACYeBjFXJ3w3AAABACOGLpjw",
     api_version="2024-02-15-preview",
     azure_endpoint="https://tbd-andrew-openai.openai.azure.com/"
 )
