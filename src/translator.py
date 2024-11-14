@@ -2,9 +2,9 @@ import string, os
 
 from openai import AzureOpenAI
 from src.constants import *
-from sentence_transformers import SentenceTransformer, util
+# from sentence_transformers import SentenceTransformer, util
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+# model = SentenceTransformer('all-MiniLM-L6-v2')
 
 AZUREOPENAI_API_KEY = os.getenv('AZUREOPENAI_API_KEY')
 
