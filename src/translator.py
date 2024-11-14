@@ -1,18 +1,23 @@
-import string
+import string, os
 
 from openai import AzureOpenAI
-from constants import *
+from src.constants import *
+from sentence_transformers import SentenceTransformer, util
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+AZUREOPENAI_API_KEY = os.getenv('AZUREOPENAI_API_KEY')
 
 # Initialize the Azure OpenAI client
 client = AzureOpenAI(
-    api_key="A3jAqgnw7S5tWR1x6RyhTPcRJADK8mV7pN5WondwLRI4bEzssq6yJQQJ99AJACYeBjFXJ3w3AAABACOGLpjw",
+    api_key=AZUREOPENAI_API_KEY,
     api_version="2024-02-15-preview",
     azure_endpoint="https://tbd-andrew-openai.openai.azure.com/"
 )
 
 # Make a request to your Azure OpenAI model
 response = client.chat.completions.create(
-    model="gpt-4o-mini",  # This should match your deployment name in Azure
+    model="gpt-4o-mini",
     messages=[
         {
             "role": "user",
@@ -23,7 +28,7 @@ response = client.chat.completions.create(
 
 def get_translation(post: str) -> str:
     response = client.chat.completions.create(
-        model="gpt-4o-mini",  # This should match your deployment name in Azure
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "system",
@@ -39,7 +44,7 @@ def get_translation(post: str) -> str:
 
 def get_language(post: str) -> str:
     response = client.chat.completions.create(
-        model="gpt-4o-mini",  # This should match your deployment name in Azure
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "system",
