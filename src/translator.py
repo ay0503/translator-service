@@ -1,34 +1,69 @@
+import string
+
+from openai import AzureOpenAI
+from constants import *
+
+# Initialize the Azure OpenAI client
+client = AzureOpenAI(
+    api_key="A3jAqgnw7S5tWR1x6RyhTPcRJADK8mV7pN5WondwLRI4bEzssq6yJQQJ99AJACYeBjFXJ3w3AAABACOGLpjw",
+    api_version="2024-02-15-preview",
+    azure_endpoint="https://tbd-andrew-openai.openai.azure.com/"
+)
+
+# Make a request to your Azure OpenAI model
+response = client.chat.completions.create(
+    model="gpt-4o-mini",  # This should match your deployment name in Azure
+    messages=[
+        {
+            "role": "user",
+            "content": "I'm here to use you as a translator."
+        }
+    ]
+)
+
+def get_translation(post: str) -> str:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",  # This should match your deployment name in Azure
+        messages=[
+            {
+                "role": "system",
+                "content": NODEBB_TRANSLATION_CONTEXT
+            },
+            {
+                "role": "user",
+                "content": post
+            }
+        ]
+    )
+    return response.choices[0].message.content
+
+def get_language(post: str) -> str:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",  # This should match your deployment name in Azure
+        messages=[
+            {
+                "role": "system",
+                "content": NODEBB_CLASSIFICATION_CONTEXT
+            },
+            {
+                "role": "user",
+                "content": post
+            }
+        ]
+    )
+
+    return response.choices[0].message.content
+
 def translate_content(content: str) -> tuple[bool, str]:
-    if content == "这是一条中文消息":
-        return False, "This is a Chinese message"
-    if content == "Ceci est un message en français":
-        return False, "This is a French message"
-    if content == "Esta es un mensaje en español":
-        return False, "This is a Spanish message"
-    if content == "Esta é uma mensagem em português":
-        return False, "This is a Portuguese message"
-    if content  == "これは日本語のメッセージです":
-        return False, "This is a Japanese message"
-    if content == "이것은 한국어 메시지입니다":
-        return False, "This is a Korean message"
-    if content == "Dies ist eine Nachricht auf Deutsch":
-        return False, "This is a German message"
-    if content == "Questo è un messaggio in italiano":
-        return False, "This is an Italian message"
-    if content == "Это сообщение на русском":
-        return False, "This is a Russian message"
-    if content == "هذه رسالة باللغة العربية":
-        return False, "This is an Arabic message"
-    if content == "यह हिंदी में संदेश है":
-        return False, "This is a Hindi message"
-    if content == "นี่คือข้อความภาษาไทย":
-        return False, "This is a Thai message"
-    if content == "Bu bir Türkçe mesajdır":
-        return False, "This is a Turkish message"
-    if content == "Đây là một tin nhắn bằng tiếng Việt":
-        return False, "This is a Vietnamese message"
-    if content == "Esto es un mensaje en catalán":
-        return False, "This is a Catalan message"
-    if content == "This is an English message":
-        return True, "This is an English message"
-    return True, content
+    try:
+        is_english = get_language(content).strip().lower() == ENGLISH
+        if is_english:
+            return (True, content)
+
+        translation = get_translation(content)
+        if isinstance(translation, str) and translation.strip():
+            return (False, translation)
+        else:
+            raise ValueError("Invalid format: Translation is not a valid string.")
+    except Exception as e:
+        return (False, "Error processing the request")
