@@ -3,12 +3,14 @@ import os
 from flask import Flask
 from flask import request, jsonify
 from src.translator import translate_content
+from urllib.parse import unquote
 
 app = Flask(__name__)
 
 @app.route("/")
 def translator():
-    content = request.args.get("content", default = "", type = str)
+    encoded_content = request.args.get("content", default="", type=str)
+    content = unquote(encoded_content)
     is_english, translated_content = translate_content(content)
     return jsonify({
         "is_english": is_english,
