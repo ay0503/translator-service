@@ -1,6 +1,8 @@
 from src.translator import translate_content
 from unittest.mock import patch
 
+# test implementation assisted with ChatGPT
+
 @patch('src.translator.get_language')
 @patch('src.translator.get_translation')
 def test_unintelligible_post(self, mock_translation, mock_language):
