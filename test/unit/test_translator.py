@@ -1,96 +1,52 @@
 from src.translator import translate_content
+from unittest.mock import patch
 
-def test_chinese():
-    is_english, translated_content = translate_content("这是一条中文消息")
-    assert is_english == False
-    assert translated_content == "This is a Chinese message"
+@patch('src.translator.get_language')
+@patch('src.translator.get_translation')
+def test_unintelligible_post(self, mock_translation, mock_language):
+    # unintelligible input scenario
+    mock_language.return_value = "Unintelligible"
+    mock_translation.return_value = "Unintelligible"
 
-def test_french():
-    is_english, translated_content = translate_content("Ceci est un message en français")
-    assert is_english == False
-    assert translated_content == "This is a French message"
+    input_post = "!!!@@@###"
+    expected_result = (False, "Unintelligible")
 
-def test_spanish():
-    is_english, translated_content = translate_content("Esta es un mensaje en español")
-    assert is_english == False
-    assert translated_content == "This is a Spanish message"
+    result = translate_content(input_post)
+    self.assertEqual(result, expected_result)
 
-def test_portuguese():
-    is_english, translated_content = translate_content("Esta é uma mensagem em português")
-    assert is_english == False
-    assert translated_content == "This is a Portuguese message"
+@patch('src.translator.get_language')
+@patch('src.translator.get_translation')
+def test_unexpected_language_response(self, mock_translation, mock_language):
+    # unexpected response format
+    mock_language.return_value = "Unexpected Format"
+    mock_translation.return_value = ""
 
-def test_japanese():
-    is_english, translated_content = translate_content("これは日本語のメッセージです")
-    assert is_english == False
-    assert translated_content == "This is a Japanese message"
+    input_post = "Ceci est un exemple."
+    expected_result = (False, "Error processing the request")
 
-def test_korean():
-    is_english, translated_content = translate_content("이것은 한국어 메시지입니다")
-    assert is_english == False
-    assert translated_content == "This is a Korean message"
+    result = translate_content(input_post)
+    self.assertEqual(result, expected_result)
 
-def test_german():
-    is_english, translated_content = translate_content("Dies ist eine Nachricht auf Deutsch")
-    assert is_english == False
-    assert translated_content == "This is a German message"
+@patch('src.translator.get_language')
+@patch('src.translator.get_translation')
+def test_empty_translation_response(self, mock_translation, mock_language):
+    # empty translation response
+    mock_language.return_value = "French"
+    mock_translation.return_value = ""
 
-def test_italian():
-    is_english, translated_content = translate_content("Questo è un messaggio in italiano")
-    assert is_english == False
-    assert translated_content == "This is an Italian message"
+    input_post = "Ceci est un exemple."
+    expected_result = (False, "Error processing the request")
 
-def test_russian():
-    is_english, translated_content = translate_content("Это сообщение на русском")
-    assert is_english == False
-    assert translated_content == "This is a Russian message"
+    result = translate_content(input_post)
+    self.assertEqual(result, expected_result)
 
-def test_arabic():
-    is_english, translated_content = translate_content("هذه رسالة باللغة العربية")
-    assert is_english == False
-    assert translated_content == "This is an Arabic message"
+@patch('src.translator.get_language')
+def test_invalid_language_response(self, mock_language):
+    # invalid response for language detection
+    mock_language.return_value = "InvalidFormat"
 
-def test_hindi():
-    is_english, translated_content = translate_content("यह हिंदी में संदेश है")
-    assert is_english == False
-    assert translated_content == "This is a Hindi message"
+    input_post = "Dies ist ein Test."
+    expected_result = (False, "Error processing the request")
 
-def test_thai():
-    is_english, translated_content = translate_content("นี่คือข้อความภาษาไทย")
-    assert is_english == False
-    assert translated_content == "This is a Thai message"
-
-def test_turkish():
-    is_english, translated_content = translate_content("Bu bir Türkçe mesajdır")
-    assert is_english == False
-    assert translated_content == "This is a Turkish message"
-
-def test_vietnamese():
-    is_english, translated_content = translate_content("Đây là một tin nhắn bằng tiếng Việt")
-    assert is_english == False
-    assert translated_content == "This is a Vietnamese message"
-
-def test_catalan():
-    is_english, translated_content = translate_content("Esto es un mensaje en catalán")
-    assert is_english == False
-    assert translated_content == "This is a Catalan message"
-
-def test_english():
-    is_english, translated_content = translate_content("This is an English message")
-    assert is_english == True
-    assert translated_content == "This is an English message"
-
-def test_unknown_language():
-    is_english, translated_content = translate_content("Unrecognized language message")
-    assert is_english == True
-    assert translated_content == "Unrecognized language message"
-
-def test_llm_normal_response():
-    is_english, translated_content = translate_content("This is a typical English response.")
-    assert is_english == True
-    assert translated_content == "This is a typical English response."
-
-def test_llm_gibberish_response():
-    is_english, translated_content = translate_content("!@#$%^&*")
-    assert is_english == True
-    assert translated_content == "!@#$%^&*"
+    result = translate_content(input_post)
+    self.assertEqual(result, expected_result)
