@@ -3,6 +3,8 @@ from unittest.mock import patch
 from src.translator import translate_content
 from sentence_transformers import SentenceTransformer, util
 
+# test implementation assisted with ChatGPT
+
 class TestQueryLLM(unittest.TestCase):
     def __init__(self):
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
